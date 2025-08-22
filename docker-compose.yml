@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  backend:
+    image: helpdesk-backend  # You can also use a pre-built image or build one from the Dockerfile
+    container_name: helpdesk-backend
+    ports:
+      - "5050:5050"  # Exposing port 5050 on the host
+    networks:
+      - demo
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/helpdesk  # MongoDB URI, update if needed
+    depends_on:
+      - mongo  # Ensures MongoDB container is started before the backend
+
+  mongo:
+    image: mongo:latest  # Using the official MongoDB image
+    container_name: mongo
+    ports:
+      - "27017:27017"  # Exposing port 27017 on the host
+    networks:
+      - demo
+    volumes:
+      - ./data:/data/db  # Persist MongoDB data on the host filesystem
+
+networks:
+  demo:
+    driver: bridge  # Creates a custom bridge network
